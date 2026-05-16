@@ -47,9 +47,14 @@ Current effects are MVP and log only:
 
 - `CardData` ScriptableObject exists.
 - `CardSystem` stores max 3 cards in hand.
+- `ICardEffect` exists as the card effect contract.
+- `CardSystem.UseCard` dispatches by `CardData.CardId`.
 - `CardHandView` displays card hand.
 - `CardView` displays a complete card sprite and reacts to click.
-- Clicking a card logs `Card used: <card name>`.
+- Clicking a card asks `CardSystem` to use it.
+- Successfully used cards are removed from hand.
+- `Small Heal` restores 1 HP through `PlayerStats.Heal(1)`.
+- `Shield` and `Lucky Hit` currently resolve as placeholder log effects.
 
 Current test cards:
 - `Small Heal`
@@ -68,6 +73,7 @@ Previously verified:
 - inventory slot icon can be assigned and cleared;
 - card hand displays 3 cards;
 - clicking `CardSlot_01` logs `Card used: Small Heal`;
+- `Small Heal` restores 1 HP and is consumed after successful use;
 - console was clean after recent checks.
 
 ## Not Implemented Yet
@@ -81,7 +87,7 @@ Previously verified:
 - buff/debuff gameplay rules;
 - inventory gameplay model;
 - item data assets;
-- card effects;
+- complete card effects for `Shield` and `Lucky Hit`;
 - card cost/usage limits;
 - card draw/discard pile;
 - save/load;
@@ -92,7 +98,8 @@ Previously verified:
 
 - Most visuals are placeholder sprites.
 - Card sprites are generated placeholders.
-- Cards do not apply effects.
+- Only `Small Heal` applies a real gameplay effect.
+- `Shield` and `Lucky Hit` do not apply real gameplay effects yet.
 - Inventory slots are passive visuals.
 - Battle and event tiles only log messages.
 - `HealTileEffect` exists but is not connected to current `TileType`.
@@ -101,15 +108,14 @@ Previously verified:
 
 Recommended next development step:
 
-Implement card effect routing without applying complex gameplay yet.
+Expand real gameplay for existing card effects.
 
 Suggested path:
 
-1. Add a card effect interface, for example `ICardEffect`.
-2. Add focused placeholder effects for `Small Heal`, `Shield`, and `Lucky Hit`.
-3. Let `CardSystem.UseCard(CardData card)` dispatch to an effect handler.
-4. Start with `Small Heal` calling `PlayerStats.Heal(1)`.
-5. Keep `CardView` and `CardHandView` UI-only.
+1. Define what `Shield` should protect against.
+2. Define how `Lucky Hit` participates in battle.
+3. Add the minimal supporting battle/card context needed for those effects.
+4. Keep `CardView` and `CardHandView` UI-only.
 
 Alternative next step:
 

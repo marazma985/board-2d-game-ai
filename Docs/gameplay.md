@@ -109,8 +109,10 @@ Current card assets:
 
 Current behavior:
 - displays up to 3 cards in hand;
-- clicking a card logs `Card used: <card name>`;
-- no card applies gameplay effects yet;
+- clicking a card calls `CardSystem.UseCard(card)`;
+- card effects are dispatched by `CardData.cardId`;
+- `Small Heal` restores 1 HP and is consumed;
+- `Shield` and `Lucky Hit` currently only log placeholder effect messages and are consumed;
 - cards are displayed as complete ready-made sprites.
 
 ## Inventory

@@ -102,7 +102,8 @@ Current behavior:
 - empty slots are hidden;
 - each `CardView` displays only `CardData.cardSprite`;
 - clicking a card calls `CardSystem.UseCard(card)`;
-- `UseCard` logs `Card used: <card name>`.
+- successful card use removes that card from hand;
+- card effects are resolved by `CardSystem`, not by UI.
 
 Card UI does not display separate name or description text because card art already contains complete visual content.
 
@@ -127,7 +128,8 @@ Currently working:
 - level text updates from `PlayerStats`;
 - inventory slot can show assigned icon;
 - card hand displays 3 cards;
-- card click logs card usage.
+- card click routes through `CardSystem`;
+- `Small Heal` restores 1 HP and is consumed.
 
 Not implemented:
 - card animations;

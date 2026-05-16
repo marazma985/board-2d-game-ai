@@ -4,6 +4,8 @@ using UnityEngine;
 
 public sealed class TileEffectSystem : MonoBehaviour
 {
+    [SerializeField] private BattleSystem battleSystem;
+
     private readonly HealTileEffect healTileEffect = new HealTileEffect();
     private readonly DebuffTileEffect debuffTileEffect = new DebuffTileEffect();
     private readonly BattleTileEffect battleTileEffect = new BattleTileEffect();
@@ -35,13 +37,25 @@ public sealed class TileEffectSystem : MonoBehaviour
         if (tile != null)
         {
             tile.Enter();
-            GetEffect(tile.TileType).Resolve(tile);
+            var effect = GetEffect(tile.TileType);
+            if (effect is IDeferredTileEffect deferredTileEffect)
+            {
+                deferredTileEffect.Resolve(tile, () => CompleteTileResolution(tile, onResolved));
+                return;
+            }
+
+            effect.Resolve(tile);
         }
         else
         {
             Debug.LogWarning("TileEffectSystem received null tile.");
         }
 
+        CompleteTileResolution(tile, onResolved);
+    }
+
+    private void CompleteTileResolution(BoardTile tile, Action onResolved)
+    {
         TileResolved?.Invoke(tile);
         onResolved?.Invoke();
     }
@@ -67,6 +81,7 @@ public sealed class TileEffectSystem : MonoBehaviour
     private void InitializeEffects()
     {
         effectsByTileType.Clear();
+        battleTileEffect.SetBattleSystem(battleSystem);
         RegisterEffect(TileType.RandomEvent, eventTileEffect);
         RegisterEffect(TileType.RareEvent, rareTileEffect);
         RegisterEffect(TileType.Battle, battleTileEffect);

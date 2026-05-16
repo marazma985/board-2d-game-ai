@@ -136,15 +136,23 @@ Files:
 - `Assets/Scripts/Board/CardSystem.cs`
 - `Assets/Scripts/Board/CardHandView.cs`
 - `Assets/Scripts/Board/CardView.cs`
+- `Assets/Scripts/Board/ICardEffect.cs`
+- `Assets/Scripts/Board/*CardEffect.cs`
 
 Responsibilities:
 - `CardData` is a ScriptableObject for card data and card sprite;
 - `CardSystem` stores current hand, max 3 cards;
+- `CardSystem.UseCard(CardData card)` dispatches by `CardData.CardId`;
 - `CardHandView` displays hand in UI;
 - `CardView` displays one ready-made card sprite and reports clicks;
-- `UseCard(CardData card)` currently only logs `Card used: <name>`.
+- used cards are removed from hand after a successful effect.
 
-No real card gameplay effects exist yet.
+Current card effect mapping:
+- `small_heal` -> `SmallHealCardEffect`, calls `PlayerStats.Heal(1)`;
+- `shield` -> `ShieldCardEffect`, placeholder log only;
+- `lucky_hit` -> `LuckyHitCardEffect`, placeholder log only.
+
+`CardSystem` receives `PlayerStats` through a serialized Inspector reference. UI classes do not apply card effects.
 
 ## Scene Object Links
 
@@ -196,10 +204,11 @@ Implemented:
 - HP/level data;
 - HUD display;
 - passive inventory slot display;
-- card data, hand display, card click logging.
+- card data, hand display, card effect dispatch;
+- `Small Heal` restores 1 HP and is consumed after use.
 
 MVP only:
 - tile effects only log messages;
-- cards only log usage;
+- `Shield` and `Lucky Hit` card effects only log messages;
 - inventory slots are visual only;
 - battle/event/buff/debuff do not apply gameplay effects yet.

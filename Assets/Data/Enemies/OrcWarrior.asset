@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbdbc750bd4b4b2d968668d1615120fa, type: 3}
+  m_Name: OrcWarrior
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyId: orc_warrior
+  enemyName: Orc Warrior
+  enemySprite: {fileID: -7998678513828511344, guid: b6d906db9f9a3e1439aa1f2aa2d46493, type: 3}
+  level: 5
+  bonusPower: 1
