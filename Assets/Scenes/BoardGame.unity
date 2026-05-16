@@ -201,7 +201,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: dcbe114d9f596074abf5043745b7e769, type: 3}
-  m_Color: {r: 0.7, g: 0.45, b: 1, a: 1}
+  m_Color: {r: 0.38, g: 0.9, b: 0.48, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -292,7 +292,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: dcbe114d9f596074abf5043745b7e769, type: 3}
-  m_Color: {r: 0.38, g: 0.9, b: 0.48, a: 1}
+  m_Color: {r: 1, g: 0.45, b: 0.38, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -399,7 +399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardTile
   index: 9
-  tileType: 4
+  tileType: 2
   entered:
     m_PersistentCalls:
       m_Calls: []
@@ -951,7 +951,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardTile
   index: 3
-  tileType: 3
+  tileType: 2
   entered:
     m_PersistentCalls:
       m_Calls: []
@@ -1245,7 +1245,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: dcbe114d9f596074abf5043745b7e769, type: 3}
-  m_Color: {r: 0.38, g: 0.9, b: 0.48, a: 1}
+  m_Color: {r: 0.7, g: 0.45, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1301,7 +1301,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardTile
   index: 8
-  tileType: 1
+  tileType: 3
   entered:
     m_PersistentCalls:
       m_Calls: []
@@ -1352,7 +1352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardTile
   index: 5
-  tileType: 2
+  tileType: 3
   entered:
     m_PersistentCalls:
       m_Calls: []
@@ -1495,7 +1495,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardTile
   index: 0
-  tileType: 2
+  tileType: 1
   entered:
     m_PersistentCalls:
       m_Calls: []
@@ -1869,7 +1869,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardTile
   index: 6
-  tileType: 0
+  tileType: 2
   entered:
     m_PersistentCalls:
       m_Calls: []
@@ -1955,7 +1955,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: dcbe114d9f596074abf5043745b7e769, type: 3}
-  m_Color: {r: 0.38, g: 0.9, b: 0.48, a: 1}
+  m_Color: {r: 0.7, g: 0.45, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2011,7 +2011,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardTile
   index: 4
-  tileType: 1
+  tileType: 0
   entered:
     m_PersistentCalls:
       m_Calls: []
@@ -2244,7 +2244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardTile
   index: 1
-  tileType: 1
+  tileType: 3
   entered:
     m_PersistentCalls:
       m_Calls: []
@@ -2330,7 +2330,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: dcbe114d9f596074abf5043745b7e769, type: 3}
-  m_Color: {r: 0.7, g: 0.45, b: 1, a: 1}
+  m_Color: {r: 0.38, g: 0.9, b: 0.48, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3362,7 +3362,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: dcbe114d9f596074abf5043745b7e769, type: 3}
-  m_Color: {r: 1, g: 0.45, b: 0.38, a: 1}
+  m_Color: {r: 0.38, g: 0.9, b: 0.48, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3544,7 +3544,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: dcbe114d9f596074abf5043745b7e769, type: 3}
-  m_Color: {r: 1, g: 0.45, b: 0.38, a: 1}
+  m_Color: {r: 0.35, g: 0.8, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3877,7 +3877,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: dcbe114d9f596074abf5043745b7e769, type: 3}
-  m_Color: {r: 1, g: 0.78, b: 0.25, a: 1}
+  m_Color: {r: 1, g: 0.45, b: 0.38, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3968,7 +3968,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: dcbe114d9f596074abf5043745b7e769, type: 3}
-  m_Color: {r: 0.7, g: 0.45, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.78, b: 0.25, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -4357,7 +4357,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: dcbe114d9f596074abf5043745b7e769, type: 3}
-  m_Color: {r: 0.35, g: 0.8, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.45, b: 0.38, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
