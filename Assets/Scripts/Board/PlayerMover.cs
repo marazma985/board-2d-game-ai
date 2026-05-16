@@ -60,7 +60,6 @@ public sealed class PlayerMover : MonoBehaviour
                 break;
 
             yield return MoveToTile(currentTile);
-            currentTile.Enter();
 
             if (stopDuration > 0f && i < steps - 1)
                 yield return new WaitForSeconds(stopDuration);
@@ -93,14 +92,14 @@ public sealed class PlayerMover : MonoBehaviour
 
     private void Reset()
     {
-        boardManager = FindFirstObjectByType<BoardManager>();
+        boardManager = FindAnyObjectByType<BoardManager>();
         CacheTileLocalOffset();
     }
 
     private void OnValidate()
     {
         if (boardManager == null)
-            boardManager = FindFirstObjectByType<BoardManager>();
+            boardManager = FindAnyObjectByType<BoardManager>();
 
         if (tileLocalOffset == Vector3.zero)
             CacheTileLocalOffset();

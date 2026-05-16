@@ -4,14 +4,12 @@ using UnityEngine.UI;
 public sealed class DiceRollButtonController : MonoBehaviour
 {
     [SerializeField] private Button button;
-    [SerializeField] private DiceSystem diceSystem;
-    [SerializeField] private PlayerMover playerMover;
+    [SerializeField] private TurnSystem turnSystem;
 
     private void Reset()
     {
         button = GetComponent<Button>();
-        diceSystem = FindFirstObjectByType<DiceSystem>();
-        playerMover = FindFirstObjectByType<PlayerMover>();
+        turnSystem = FindAnyObjectByType<TurnSystem>();
     }
 
     private void OnEnable()
@@ -20,13 +18,26 @@ public sealed class DiceRollButtonController : MonoBehaviour
             button = GetComponent<Button>();
 
         if (button != null)
-            button.onClick.AddListener(RollAndMove);
+            button.onClick.AddListener(RequestRoll);
+
+        if (turnSystem != null)
+        {
+            turnSystem.StateChanged += HandleTurnStateChanged;
+            turnSystem.DiceRolled += HandleDiceRolled;
+            HandleTurnStateChanged(turnSystem.State);
+        }
     }
 
     private void OnDisable()
     {
         if (button != null)
-            button.onClick.RemoveListener(RollAndMove);
+            button.onClick.RemoveListener(RequestRoll);
+
+        if (turnSystem != null)
+        {
+            turnSystem.StateChanged -= HandleTurnStateChanged;
+            turnSystem.DiceRolled -= HandleDiceRolled;
+        }
     }
 
     private void OnValidate()
@@ -35,21 +46,40 @@ public sealed class DiceRollButtonController : MonoBehaviour
             button = GetComponent<Button>();
     }
 
-    public void RollAndMove()
+    public void RequestRoll()
     {
-        if (diceSystem == null || playerMover == null || playerMover.IsMoving)
+        if (turnSystem == null)
             return;
 
-        button.interactable = false;
-
-        var value = diceSystem.Roll();
-        Debug.Log($"Dice rolled: {value}");
-        playerMover.MoveSteps(value, EnableButton);
+        turnSystem.TryRollDice();
     }
 
-    private void EnableButton()
+    private void HandleTurnStateChanged(TurnState state)
     {
         if (button != null)
-            button.interactable = true;
+            button.interactable = state == TurnState.WaitingForRoll;
+    }
+
+    private void HandleDiceRolled(int value)
+    {
+        Debug.Log($"Dice rolled: {value}");
+    }
+
+    public void SetTurnSystem(TurnSystem newTurnSystem)
+    {
+        if (turnSystem != null && isActiveAndEnabled)
+        {
+            turnSystem.StateChanged -= HandleTurnStateChanged;
+            turnSystem.DiceRolled -= HandleDiceRolled;
+        }
+
+        turnSystem = newTurnSystem;
+
+        if (turnSystem != null && isActiveAndEnabled)
+        {
+            turnSystem.StateChanged += HandleTurnStateChanged;
+            turnSystem.DiceRolled += HandleDiceRolled;
+            HandleTurnStateChanged(turnSystem.State);
+        }
     }
 }

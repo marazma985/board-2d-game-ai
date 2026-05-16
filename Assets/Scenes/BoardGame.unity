@@ -2543,6 +2543,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1294733951}
   - component: {fileID: 1294733952}
+  - component: {fileID: 1294733954}
+  - component: {fileID: 1294733953}
   m_Layer: 0
   m_Name: BoardRoot
   m_TagString: Untagged
@@ -2601,6 +2603,35 @@ MonoBehaviour:
   - {fileID: 201410753}
   cyclePath: 1
   currentIndex: 0
+--- !u!114 &1294733953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1294733950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c5a3715291f06542922836c477d3679, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TurnSystem
+  diceSystem: {fileID: 1633051903}
+  playerMover: {fileID: 1266047072}
+  boardManager: {fileID: 1294733952}
+  tileEffectSystem: {fileID: 1294733954}
+  state: 0
+--- !u!114 &1294733954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1294733950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd7a49a0ae367994eb745b66758730ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TileEffectSystem
 --- !u!1 &1348819609
 GameObject:
   m_ObjectHideFlags: 0
@@ -3021,8 +3052,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DiceRollButtonController
   button: {fileID: 1476678495}
-  diceSystem: {fileID: 1633051903}
-  playerMover: {fileID: 1266047072}
+  turnSystem: {fileID: 1294733953}
 --- !u!114 &1476678495
 MonoBehaviour:
   m_ObjectHideFlags: 0
