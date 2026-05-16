@@ -116,6 +116,12 @@ public sealed class DiceRollButtonController : MonoBehaviour
         if (button == null)
             return;
 
-        button.interactable = (turnSystem != null && turnSystem.State == TurnState.WaitingForRoll) || (battleSystem != null && battleSystem.IsBattleActive);
+        if (battleSystem != null && battleSystem.IsBattleActive)
+        {
+            button.interactable = battleSystem.CanUseBattleDice;
+            return;
+        }
+
+        button.interactable = turnSystem != null && turnSystem.CanRoll;
     }
 }

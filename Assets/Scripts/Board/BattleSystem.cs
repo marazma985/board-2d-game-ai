@@ -139,12 +139,14 @@ public sealed class BattleSystem : MonoBehaviour
             Debug.Log($"Battle won: {currentBattleData.PlayerName} defeated {currentBattleData.EnemyName}. Level is now {playerStats.Level}.");
             battleModalView.UpdateState("Player won", "Close");
             phase = BattlePhase.WaitingForClose;
+            BattleStateChanged?.Invoke();
         }
         else
         {
             Debug.Log($"Battle lost: {currentBattleData.PlayerName} failed against {currentBattleData.EnemyName}.");
             battleModalView.UpdateState("Player lost, trying to escape", "Roll Escape");
             phase = BattlePhase.WaitingForEscapeRoll;
+            BattleStateChanged?.Invoke();
         }
     }
 
@@ -176,6 +178,7 @@ public sealed class BattleSystem : MonoBehaviour
         }
 
         phase = BattlePhase.WaitingForClose;
+        BattleStateChanged?.Invoke();
     }
 
     private void ApplyPenalty()

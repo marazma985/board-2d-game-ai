@@ -32,6 +32,24 @@ public sealed class TurnSystem : MonoBehaviour
         return true;
     }
 
+    [ContextMenu("Test Move 3 Tiles")]
+    public void TestMoveThreeTiles()
+    {
+        TryMoveFixedSteps(3);
+    }
+
+    public bool TryMoveFixedSteps(int steps)
+    {
+        if (!CanRoll || steps <= 0)
+        {
+            RollRejected?.Invoke();
+            return false;
+        }
+
+        StartTurnWithSteps(steps);
+        return true;
+    }
+
     public void SetSystems(DiceSystem newDiceSystem, PlayerMover newPlayerMover, BoardManager newBoardManager, TileEffectSystem newTileEffectSystem)
     {
         diceSystem = newDiceSystem;
@@ -53,6 +71,24 @@ public sealed class TurnSystem : MonoBehaviour
         var steps = diceSystem.Roll();
         DiceRolled?.Invoke(steps);
 
+        StartMovement(steps);
+    }
+
+    private void StartTurnWithSteps(int steps)
+    {
+        if (playerMover == null || boardManager == null || tileEffectSystem == null || playerMover.IsMoving)
+        {
+            RollRejected?.Invoke();
+            return;
+        }
+
+        SetState(TurnState.RollingDice);
+        DiceRolled?.Invoke(steps);
+        StartMovement(steps);
+    }
+
+    private void StartMovement(int steps)
+    {
         SetState(TurnState.MovingPlayer);
         playerMover.MoveSteps(steps, OnPlayerMoveCompleted);
     }
