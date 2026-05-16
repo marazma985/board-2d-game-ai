@@ -20,8 +20,13 @@ public sealed class BattleSystem : MonoBehaviour
     private EnemyData currentEnemy;
     private Action battleCompleted;
     private BattlePhase phase;
+    private int currentBattleDiceBonus;
+    private bool battleDiceUsed;
+
+    public event Action BattleStateChanged;
 
     public bool IsBattleActive => currentBattleData != null;
+    public bool CanUseBattleDice => IsBattleActive && phase == BattlePhase.WaitingForResolve && !battleDiceUsed && GetPowerDifference() >= 1 && GetPowerDifference() <= 6;
 
     private enum BattlePhase
     {
@@ -75,9 +80,37 @@ public sealed class BattleSystem : MonoBehaviour
 
         battleCompleted = onBattleCompleted;
         currentEnemy = enemy;
+        currentBattleDiceBonus = 0;
+        battleDiceUsed = false;
         currentBattleData = CreateBattleData(enemy);
         phase = BattlePhase.WaitingForResolve;
         battleModalView.Show(currentBattleData);
+        battleModalView.UpdateState(CanUseBattleDice ? "Battle dice available" : "Battle dice unavailable", "Resolve Battle");
+        BattleStateChanged?.Invoke();
+    }
+
+    public bool RollBattleDice()
+    {
+        if (!IsBattleActive)
+        {
+            Debug.LogWarning("Battle dice requested, but there is no active battle.");
+            return false;
+        }
+
+        if (!CanUseBattleDice)
+        {
+            Debug.LogWarning("Battle dice is unavailable.");
+            return false;
+        }
+
+        currentBattleDiceBonus = diceSystem.Roll();
+        battleDiceUsed = true;
+        currentBattleData = CreateBattleData(currentEnemy);
+        battleModalView.Show(currentBattleData);
+        battleModalView.UpdateState($"Battle dice used: +{currentBattleDiceBonus}", "Resolve Battle");
+        Debug.Log($"Battle dice used: +{currentBattleDiceBonus}. Player total is now {currentBattleData.PlayerTotalPower}.");
+        BattleStateChanged?.Invoke();
+        return true;
     }
 
     public void ResolveCurrentBattle()
@@ -169,6 +202,9 @@ public sealed class BattleSystem : MonoBehaviour
         currentBattleData = null;
         currentEnemy = null;
         phase = BattlePhase.None;
+        currentBattleDiceBonus = 0;
+        battleDiceUsed = false;
+        BattleStateChanged?.Invoke();
 
         var onCompleted = battleCompleted;
         battleCompleted = null;
@@ -201,8 +237,9 @@ public sealed class BattleSystem : MonoBehaviour
             new BattlePowerEntry("Equipment bonus", equipmentBonus)
         };
 
-        if (diceBonus > 0)
-            playerEntries.Add(new BattlePowerEntry("Dice bonus", diceBonus));
+        var totalDiceBonus = diceBonus + currentBattleDiceBonus;
+        if (totalDiceBonus > 0)
+            playerEntries.Add(new BattlePowerEntry("Dice bonus", totalDiceBonus));
 
         if (cardBonus > 0)
             playerEntries.Add(new BattlePowerEntry("Card bonuses", cardBonus));
@@ -233,5 +270,10 @@ public sealed class BattleSystem : MonoBehaviour
             total += entries[i].Value;
 
         return total;
+    }
+
+    private int GetPowerDifference()
+    {
+        return currentBattleData == null ? 0 : currentBattleData.EnemyTotalPower - currentBattleData.PlayerTotalPower;
     }
 }

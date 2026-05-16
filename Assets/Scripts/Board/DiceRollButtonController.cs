@@ -5,6 +5,7 @@ public sealed class DiceRollButtonController : MonoBehaviour
 {
     [SerializeField] private Button button;
     [SerializeField] private TurnSystem turnSystem;
+    [SerializeField] private BattleSystem battleSystem;
 
     private void Reset()
     {
@@ -26,6 +27,11 @@ public sealed class DiceRollButtonController : MonoBehaviour
             turnSystem.DiceRolled += HandleDiceRolled;
             HandleTurnStateChanged(turnSystem.State);
         }
+
+        if (battleSystem != null)
+            battleSystem.BattleStateChanged += RefreshButtonState;
+
+        RefreshButtonState();
     }
 
     private void OnDisable()
@@ -38,6 +44,9 @@ public sealed class DiceRollButtonController : MonoBehaviour
             turnSystem.StateChanged -= HandleTurnStateChanged;
             turnSystem.DiceRolled -= HandleDiceRolled;
         }
+
+        if (battleSystem != null)
+            battleSystem.BattleStateChanged -= RefreshButtonState;
     }
 
     private void OnValidate()
@@ -48,6 +57,13 @@ public sealed class DiceRollButtonController : MonoBehaviour
 
     public void RequestRoll()
     {
+        if (battleSystem != null && battleSystem.IsBattleActive)
+        {
+            battleSystem.RollBattleDice();
+            RefreshButtonState();
+            return;
+        }
+
         if (turnSystem == null)
             return;
 
@@ -56,8 +72,7 @@ public sealed class DiceRollButtonController : MonoBehaviour
 
     private void HandleTurnStateChanged(TurnState state)
     {
-        if (button != null)
-            button.interactable = state == TurnState.WaitingForRoll;
+        RefreshButtonState();
     }
 
     private void HandleDiceRolled(int value)
@@ -81,5 +96,26 @@ public sealed class DiceRollButtonController : MonoBehaviour
             turnSystem.DiceRolled += HandleDiceRolled;
             HandleTurnStateChanged(turnSystem.State);
         }
+    }
+
+    public void SetBattleSystem(BattleSystem newBattleSystem)
+    {
+        if (battleSystem != null && isActiveAndEnabled)
+            battleSystem.BattleStateChanged -= RefreshButtonState;
+
+        battleSystem = newBattleSystem;
+
+        if (battleSystem != null && isActiveAndEnabled)
+            battleSystem.BattleStateChanged += RefreshButtonState;
+
+        RefreshButtonState();
+    }
+
+    private void RefreshButtonState()
+    {
+        if (button == null)
+            return;
+
+        button.interactable = (turnSystem != null && turnSystem.State == TurnState.WaitingForRoll) || (battleSystem != null && battleSystem.IsBattleActive);
     }
 }
