@@ -4,9 +4,11 @@ using UnityEngine;
 
 public sealed class BattleSystem : MonoBehaviour
 {
-    private const string PlayerName = "Карамелька";
+    private const string PlayerName = "\u041a\u0430\u0440\u0430\u043c\u0435\u043b\u044c\u043a\u0430";
+    private const int EscapeSuccessRoll = 5;
 
     [SerializeField] private PlayerStats playerStats;
+    [SerializeField] private DiceSystem diceSystem;
     [SerializeField] private Sprite playerSprite;
     [SerializeField] private BattleModalView battleModalView;
     [SerializeField] private List<EnemyData> enemies = new List<EnemyData>();
@@ -15,9 +17,19 @@ public sealed class BattleSystem : MonoBehaviour
     [SerializeField, Min(0)] private int diceBonus;
 
     private BattleModalData currentBattleData;
+    private EnemyData currentEnemy;
     private Action battleCompleted;
+    private BattlePhase phase;
 
     public bool IsBattleActive => currentBattleData != null;
+
+    private enum BattlePhase
+    {
+        None,
+        WaitingForResolve,
+        WaitingForEscapeRoll,
+        WaitingForClose
+    }
 
     public void StartBattle()
     {
@@ -39,6 +51,13 @@ public sealed class BattleSystem : MonoBehaviour
             return;
         }
 
+        if (diceSystem == null)
+        {
+            Debug.LogWarning("BattleSystem requires DiceSystem.");
+            onBattleCompleted?.Invoke();
+            return;
+        }
+
         if (battleModalView == null)
         {
             Debug.LogWarning("BattleSystem requires BattleModalView.");
@@ -55,8 +74,45 @@ public sealed class BattleSystem : MonoBehaviour
         }
 
         battleCompleted = onBattleCompleted;
+        currentEnemy = enemy;
         currentBattleData = CreateBattleData(enemy);
+        phase = BattlePhase.WaitingForResolve;
         battleModalView.Show(currentBattleData);
+    }
+
+    public void ResolveCurrentBattle()
+    {
+        if (currentBattleData == null)
+            return;
+
+        if (phase == BattlePhase.WaitingForEscapeRoll)
+        {
+            RollEscape();
+            return;
+        }
+
+        if (phase == BattlePhase.WaitingForClose)
+        {
+            CompleteBattle();
+            return;
+        }
+
+        if (phase != BattlePhase.WaitingForResolve)
+            return;
+
+        if (currentBattleData.PlayerTotalPower > currentBattleData.EnemyTotalPower)
+        {
+            playerStats.SetLevel(playerStats.Level + 1);
+            Debug.Log($"Battle won: {currentBattleData.PlayerName} defeated {currentBattleData.EnemyName}. Level is now {playerStats.Level}.");
+            battleModalView.UpdateState("Player won", "Close");
+            phase = BattlePhase.WaitingForClose;
+        }
+        else
+        {
+            Debug.Log($"Battle lost: {currentBattleData.PlayerName} failed against {currentBattleData.EnemyName}.");
+            battleModalView.UpdateState("Player lost, trying to escape", "Roll Escape");
+            phase = BattlePhase.WaitingForEscapeRoll;
+        }
     }
 
     private void OnEnable()
@@ -71,22 +127,48 @@ public sealed class BattleSystem : MonoBehaviour
             battleModalView.ResolveRequested -= ResolveCurrentBattle;
     }
 
-    public void ResolveCurrentBattle()
+    private void RollEscape()
     {
-        if (currentBattleData == null)
-            return;
-
-        if (currentBattleData.PlayerTotalPower > currentBattleData.EnemyTotalPower)
+        var escapeRoll = diceSystem.Roll();
+        if (escapeRoll >= EscapeSuccessRoll)
         {
-            Debug.Log($"Battle won: {currentBattleData.PlayerName} defeated {currentBattleData.EnemyName}.");
+            Debug.Log($"Escape successful. Rolled {escapeRoll}.");
+            battleModalView.UpdateState("Escape successful", "Close");
         }
         else
         {
-            Debug.Log($"Battle lost: {currentBattleData.PlayerName} failed against {currentBattleData.EnemyName}.");
+            Debug.Log($"Escape failed. Rolled {escapeRoll}.");
+            ApplyPenalty();
+            battleModalView.UpdateState("Escape failed. Penalty applied", "Close");
         }
 
+        phase = BattlePhase.WaitingForClose;
+    }
+
+    private void ApplyPenalty()
+    {
+        if (currentEnemy == null || currentEnemy.PenaltyValue <= 0)
+            return;
+
+        switch (currentEnemy.PenaltyType)
+        {
+            case MonsterPenaltyType.LoseHp:
+                playerStats.TakeDamage(currentEnemy.PenaltyValue);
+                Debug.Log($"{currentEnemy.EnemyName} penalty applied: lose {currentEnemy.PenaltyValue} HP.");
+                break;
+            case MonsterPenaltyType.LoseLevel:
+                playerStats.SetLevel(playerStats.Level - currentEnemy.PenaltyValue);
+                Debug.Log($"{currentEnemy.EnemyName} penalty applied: lose {currentEnemy.PenaltyValue} level.");
+                break;
+        }
+    }
+
+    private void CompleteBattle()
+    {
         battleModalView.Hide();
         currentBattleData = null;
+        currentEnemy = null;
+        phase = BattlePhase.None;
 
         var onCompleted = battleCompleted;
         battleCompleted = null;

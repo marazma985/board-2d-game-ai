@@ -15,6 +15,8 @@ public sealed class BattleModalView : MonoBehaviour
     [SerializeField] private Image enemyPortraitImage;
     [SerializeField] private TextMeshProUGUI enemyPowerText;
     [SerializeField] private TextMeshProUGUI enemyTotalText;
+    [SerializeField] private TextMeshProUGUI statusText;
+    [SerializeField] private TextMeshProUGUI actionButtonText;
     [SerializeField] private Button resolveButton;
 
     public event Action ResolveRequested;
@@ -33,8 +35,15 @@ public sealed class BattleModalView : MonoBehaviour
         SetImage(enemyPortraitImage, data.EnemySprite);
         SetText(enemyPowerText, FormatEntries(data.EnemyPowerEntries));
         SetText(enemyTotalText, $"Total: {data.EnemyTotalPower}");
+        UpdateState("Battle started", "Resolve Battle");
 
         gameObject.SetActive(true);
+    }
+
+    public void UpdateState(string status, string buttonText)
+    {
+        SetText(statusText, status);
+        SetText(actionButtonText, buttonText);
     }
 
     public void Hide()
